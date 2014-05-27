@@ -1,0 +1,371 @@
+## branches, syscalls, exceptions
+@opb	28,26
+# compare and branch
+!cmpb
+CBZ	cmpb	Ibranch	sf<31>=0	$<30,25>=1A	op<24>=0	imm19<23,5>	Rt<4,0>
+CBZ	cmpb	Ibranch	sf<31>=1	$<30,25>=1A	op<24>=0	imm19<23,5>	Rt<4,0>
+CBNZ	cmpb	Ibranch	sf<31>=0	$<30,25>=1A	op<24>=1	imm19<23,5>	Rt<4,0>
+CBNZ	cmpb	Ibranch	sf<31>=1	$<30,25>=1A	op<24>=1	imm19<23,5>	Rt<4,0>
+
+# conditional branch
+!cb
+B.cond	condb	Ibranch	$<31,25>=2A	o1<24>	imm19<23,5>	o0<4>=0	cond<3,0>
+
+# system
+!sys
+SVC	syscall	Isyscall	$<31,24>=D4	opc<23,21>=0	imm16<20,5>	-op2<4,2>=0	LL<1,0>=1
+
+# test and branch
+!tb
+TBZ	tb	Ibranch	b5<31>	$<30,25>=1B	op<24>=0	b40<23,19>	imm14<18,5>	Rt<4,0>
+TBNZ	tb	Ibranch	b5<31>	$<30,25>=1B	op<24>=1	b40<23,19>	imm14<18,5>	Rt<4,0>
+
+# unconditional branch imm
+!ubi
+B	uncondbimm	Ibranch	op<31>=0	$<30,26>=5	imm26<25,0>
+BL	uncondbimm	Ibranch	op<31>=1	$<30,26>=5	imm26<25,0>
+
+# unconditional branch reg
+!ubr
+BR	uncondbreg	Ibranch	$<31,25>=6B	opc<24,21>=0	op2<20,16>=1F	-op3<15,10>=0	Rn<9,5>	-op4<4,0>=0
+BLR	uncondbreg	Ibranch	$<31,25>=6B	opc<24,21>=1	op2<20,16>=1F	-op3<15,10>=0	Rn<9,5>	-op4<4,0>=0
+RET	uncondbreg	Ibranch	$<31,25>=6B	opc<24,21>=2	op2<20,16>=1F	-op3<15,10>=0	Rn<9,5>	-op4<4,0>=0
+
+## alu
+@opdimm	28,26
+# add/sub imm
+!ai
+ADD	addsubimm	Iarith	sf<31>=0	op<30>=0	S<29>=0	$<28,24>=11	shift<23,22>	imm12<21,10>	Rn<9,5>	Rd<4,0>
+ADDS	addsubimm	Iarith	sf<31>=0	op<30>=0	S<29>=1	$<28,24>=11	shift<23,22>	imm12<21,10>	Rn<9,5>	Rd<4,0>
+SUB	addsubimm	Iarith	sf<31>=0	op<30>=1	S<29>=0	$<28,24>=11	shift<23,22>	imm12<21,10>	Rn<9,5>	Rd<4,0>
+SUBS	addsubimm	Iarith	sf<31>=0	op<30>=1	S<29>=1	$<28,24>=11	shift<23,22>	imm12<21,10>	Rn<9,5>	Rd<4,0>
+ADD	addsubimm	Iarith	sf<31>=1	op<30>=0	S<29>=0	$<28,24>=11	shift<23,22>	imm12<21,10>	Rn<9,5>	Rd<4,0>
+ADDS	addsubimm	Iarith	sf<31>=1	op<30>=0	S<29>=1	$<28,24>=11	shift<23,22>	imm12<21,10>	Rn<9,5>	Rd<4,0>
+SUB	addsubimm	Iarith	sf<31>=1	op<30>=1	S<29>=0	$<28,24>=11	shift<23,22>	imm12<21,10>	Rn<9,5>	Rd<4,0>
+SUBS	addsubimm	Iarith	sf<31>=1	op<30>=1	S<29>=1	$<28,24>=11	shift<23,22>	imm12<21,10>	Rn<9,5>	Rd<4,0>
+
+# bitfield
+!ab
+SBFM	bitfield	Iarith	sf<31>=0	opc<30,29>=0	$<28,23>=26	N<22>=0	immr<21,16>	imms<15,10>	Rn<9,5>	Rd<4,0>
+BFM	bitfield	Iarith	sf<31>=0	opc<30,29>=1	$<28,23>=26	N<22>=0	immr<21,16>	imms<15,10>	Rn<9,5>	Rd<4,0>
+UBFM	bitfield	Iarith	sf<31>=0	opc<30,29>=2	$<28,23>=26	N<22>=0	immr<21,16>	imms<15,10>	Rn<9,5>	Rd<4,0>
+SBFM	bitfield	Iarith	sf<31>=1	opc<30,29>=0	$<28,23>=26	N<22>=1	immr<21,16>	imms<15,10>	Rn<9,5>	Rd<4,0>
+BFM	bitfield	Iarith	sf<31>=1	opc<30,29>=1	$<28,23>=26	N<22>=1	immr<21,16>	imms<15,10>	Rn<9,5>	Rd<4,0>
+UBFM	bitfield	Iarith	sf<31>=1	opc<30,29>=2	$<28,23>=26	N<22>=1	immr<21,16>	imms<15,10>	Rn<9,5>	Rd<4,0>
+
+# extract
+!ax
+EXTR	extract	Iarith	sf<31>=0	op21<30,29>=0	$<28,23>=27	N<22>=0	o0<21>=0	Rm<20,16>	imms<15,10>	Rn<9,5>	Rd<4,0>
+EXTR	extract	Iarith	sf<31>=1	op21<30,29>=0	$<28,23>=27	N<22>=1	o0<21>=0	Rm<20,16>	imms<15,10>	Rn<9,5>	Rd<4,0>
+
+# logic imm
+!ali
+AND	logimm	Ilog	sf<31>=0	opc<30,29>=0	$<28,23>=24	N<22>	immr<21,16>	imms<15,10>	Rn<9,5>	Rd<4,0>
+ORR	logimm	Ilog	sf<31>=0	opc<30,29>=1	$<28,23>=24	N<22>	immr<21,16>	imms<15,10>	Rn<9,5>	Rd<4,0>
+EOR	logimm	Ilog	sf<31>=0	opc<30,29>=2	$<28,23>=24	N<22>	immr<21,16>	imms<15,10>	Rn<9,5>	Rd<4,0>
+ANDS	logimm	Ilog	sf<31>=0	opc<30,29>=3	$<28,23>=24	N<22>	immr<21,16>	imms<15,10>	Rn<9,5>	Rd<4,0>
+AND	logimm	Ilog	sf<31>=1	opc<30,29>=0	$<28,23>=24	N<22>	immr<21,16>	imms<15,10>	Rn<9,5>	Rd<4,0>
+ORR	logimm	Ilog	sf<31>=1	opc<30,29>=1	$<28,23>=24	N<22>	immr<21,16>	imms<15,10>	Rn<9,5>	Rd<4,0>
+EOR	logimm	Ilog	sf<31>=1	opc<30,29>=2	$<28,23>=24	N<22>	immr<21,16>	imms<15,10>	Rn<9,5>	Rd<4,0>
+ANDS	logimm	Ilog	sf<31>=1	opc<30,29>=3	$<28,23>=24	N<22>	immr<21,16>	imms<15,10>	Rn<9,5>	Rd<4,0>
+
+# move wide imm
+!amwi
+MOVN	movwimm	Iarith	sf<31>=0	opc<30,29>=0	$<28,23>=25	hw<22,21>	imm16<20,5>	Rd<4,0>
+MOVZ	movwimm	Iarith	sf<31>=0	opc<30,29>=2	$<28,23>=25	hw<22,21>	imm16<20,5>	Rd<4,0>
+MOVK	movwimm	Iarith	sf<31>=0	opc<30,29>=3	$<28,23>=25	hw<22,21>	imm16<20,5>	Rd<4,0>
+MOVN	movwimm	Iarith	sf<31>=1	opc<30,29>=0	$<28,23>=25	hw<22,21>	imm16<20,5>	Rd<4,0>
+MOVZ	movwimm	Iarith	sf<31>=1	opc<30,29>=2	$<28,23>=25	hw<22,21>	imm16<20,5>	Rd<4,0>
+MOVK	movwimm	Iarith	sf<31>=1	opc<30,29>=3	$<28,23>=25	hw<22,21>	imm16<20,5>	Rd<4,0>
+
+# PC-rel addr
+!apcr
+ADR	pcrel	Iarith	op<31>=0	immlo<30,29>=0	$<28,24>=10	immhi<23,5>	Rd<4,0>
+ADRP	pcrel	Iarith	op<31>=1	immlo<30,29>=0	$<28,24>=10	immhi<23,5>	Rd<4,0>
+
+@opdreg	27,25
+# add/sub extended reg
+!ar
+ADD	addsubreg	Iarith	sf<31>=0	op<30>=0	S<29>=0	$<28,24>=B	opt<23,22>=0	$<21>=1	Rm<20,16>	option<15,13>	imm3<12,10>	Rn<9,5>	Rd<4,0>
+ADDS	addsubreg	Iarith	sf<31>=0	op<30>=0	S<29>=1	$<28,24>=B	opt<23,22>=0	$<21>=1	Rm<20,16>	option<15,13>	imm3<12,10>	Rn<9,5>	Rd<4,0>
+SUB	addsubreg	Iarith	sf<31>=0	op<30>=1	S<29>=0	$<28,24>=B	opt<23,22>=0	$<21>=1	Rm<20,16>	option<15,13>	imm3<12,10>	Rn<9,5>	Rd<4,0>
+SUBS	addsubreg	Iarith	sf<31>=0	op<30>=1	S<29>=1	$<28,24>=B	opt<23,22>=0	$<21>=1	Rm<20,16>	option<15,13>	imm3<12,10>	Rn<9,5>	Rd<4,0>
+ADD	addsubreg	Iarith	sf<31>=1	op<30>=0	S<29>=0	$<28,24>=B	opt<23,22>=0	$<21>=1	Rm<20,16>	option<15,13>	imm3<12,10>	Rn<9,5>	Rd<4,0>
+ADDS	addsubreg	Iarith	sf<31>=1	op<30>=0	S<29>=1	$<28,24>=B	opt<23,22>=0	$<21>=1	Rm<20,16>	option<15,13>	imm3<12,10>	Rn<9,5>	Rd<4,0>
+SUB	addsubreg	Iarith	sf<31>=1	op<30>=1	S<29>=0	$<28,24>=B	opt<23,22>=0	$<21>=1	Rm<20,16>	option<15,13>	imm3<12,10>	Rn<9,5>	Rd<4,0>
+SUBS	addsubreg	Iarith	sf<31>=1	op<30>=1	S<29>=1	$<28,24>=B	opt<23,22>=0	$<21>=1	Rm<20,16>	option<15,13>	imm3<12,10>	Rn<9,5>	Rd<4,0>
+
+# add/sub shift-reg
+!asr
+ADD	addsubsreg	Iarith	sf<31>=0	op<30>=0	S<29>=0	$<28,24>=B	shift<23,22>	$<21>=0	Rm<20,16>	imm6<15,10>	Rn<9,5>	Rd<4,0>
+ADDS	addsubsreg	Iarith	sf<31>=0	op<30>=0	S<29>=1	$<28,24>=B	shift<23,22>	$<21>=0	Rm<20,16>	imm6<15,10>	Rn<9,5>	Rd<4,0>
+SUB	addsubsreg	Iarith	sf<31>=0	op<30>=1	S<29>=0	$<28,24>=B	shift<23,22>	$<21>=0	Rm<20,16>	imm6<15,10>	Rn<9,5>	Rd<4,0>
+SUBS	addsubsreg	Iarith	sf<31>=0	op<30>=1	S<29>=1	$<28,24>=B	shift<23,22>	$<21>=0	Rm<20,16>	imm6<15,10>	Rn<9,5>	Rd<4,0>
+ADD	addsubsreg	Iarith	sf<31>=1	op<30>=0	S<29>=0	$<28,24>=B	shift<23,22>	$<21>=0	Rm<20,16>	imm6<15,10>	Rn<9,5>	Rd<4,0>
+ADDS	addsubsreg	Iarith	sf<31>=1	op<30>=0	S<29>=1	$<28,24>=B	shift<23,22>	$<21>=0	Rm<20,16>	imm6<15,10>	Rn<9,5>	Rd<4,0>
+SUB	addsubsreg	Iarith	sf<31>=1	op<30>=1	S<29>=0	$<28,24>=B	shift<23,22>	$<21>=0	Rm<20,16>	imm6<15,10>	Rn<9,5>	Rd<4,0>
+SUBS	addsubsreg	Iarith	sf<31>=1	op<30>=1	S<29>=1	$<28,24>=B	shift<23,22>	$<21>=0	Rm<20,16>	imm6<15,10>	Rn<9,5>	Rd<4,0>
+
+# add/sub carry
+!ac
+ADC	addsubc	Iarith	sf<31>=0	op<30>=0	S<29>=0	$<28,21>=D0	Rm<20,16>	-opcode2<15,10>=0	Rn<9,5>	Rd<4,0>
+ADCS	addsubc	Iarith	sf<31>=0	op<30>=0	S<29>=1	$<28,21>=D0	Rm<20,16>	-opcode2<15,10>=0	Rn<9,5>	Rd<4,0>
+SBC	addsubc	Iarith	sf<31>=0	op<30>=1	S<29>=0	$<28,21>=D0	Rm<20,16>	-opcode2<15,10>=0	Rn<9,5>	Rd<4,0>
+SBCS	addsubc	Iarith	sf<31>=0	op<30>=1	S<29>=1	$<28,21>=D0	Rm<20,16>	-opcode2<15,10>=0	Rn<9,5>	Rd<4,0>
+ADC	addsubc	Iarith	sf<31>=1	op<30>=0	S<29>=0	$<28,21>=D0	Rm<20,16>	-opcode2<15,10>=0	Rn<9,5>	Rd<4,0>
+ADCS	addsubc	Iarith	sf<31>=1	op<30>=0	S<29>=1	$<28,21>=D0	Rm<20,16>	-opcode2<15,10>=0	Rn<9,5>	Rd<4,0>
+SBC	addsubc	Iarith	sf<31>=1	op<30>=1	S<29>=0	$<28,21>=D0	Rm<20,16>	-opcode2<15,10>=0	Rn<9,5>	Rd<4,0>
+SBCS	addsubc	Iarith	sf<31>=1	op<30>=1	S<29>=1	$<28,21>=D0	Rm<20,16>	-opcode2<15,10>=0	Rn<9,5>	Rd<4,0>
+
+# cond compare imm
+!aci
+CCMN	condcmpimm	Iarith	sf<31>=0	op<30>=0	S<29>=1	$<28,21>=D2	imm5<20,16>	cond<15,12>	$<11>=1	-o2<10>=0	Rn<9,5>	-o3<4>=0	nzcv<3,0>
+CCMP	condcmpimm	Iarith	sf<31>=0	op<30>=1	S<29>=1	$<28,21>=D2	imm5<20,16>	cond<15,12>	$<11>=1	-o2<10>=0	Rn<9,5>	-o3<4>=0	nzcv<3,0>
+CCMN	condcmpimm	Iarith	sf<31>=1	op<30>=0	S<29>=1	$<28,21>=D2	imm5<20,16>	cond<15,12>	$<11>=1	-o2<10>=0	Rn<9,5>	-o3<4>=0	nzcv<3,0>
+CCMP	condcmpimm	Iarith	sf<31>=1	op<30>=1	S<29>=1	$<28,21>=D2	imm5<20,16>	cond<15,12>	$<11>=1	-o2<10>=0	Rn<9,5>	-o3<4>=0	nzcv<3,0>
+
+# cond compare reg
+!acr
+CCMN	condcmpreg	Iarith	sf<31>=0	op<30>=0	S<29>=1	$<28,21>=D2	Rm<20,16>	cond<15,12>	$<11>=0	-o2<10>=0	Rn<9,5>	-o3<4>=0	nzcv<3,0>
+CCMP	condcmpreg	Iarith	sf<31>=0	op<30>=1	S<29>=1	$<28,21>=D2	Rm<20,16>	cond<15,12>	$<11>=0	-o2<10>=0	Rn<9,5>	-o3<4>=0	nzcv<3,0>
+CCMN	condcmpreg	Iarith	sf<31>=1	op<30>=0	S<29>=1	$<28,21>=D2	Rm<20,16>	cond<15,12>	$<11>=0	-o2<10>=0	Rn<9,5>	-o3<4>=0	nzcv<3,0>
+CCMP	condcmpreg	Iarith	sf<31>=1	op<30>=1	S<29>=1	$<28,21>=D2	Rm<20,16>	cond<15,12>	$<11>=0	-o2<10>=0	Rn<9,5>	-o3<4>=0	nzcv<3,0>
+
+# cond select
+!acs
+CSEL	condsel	Iarith	sf<31>=0	op<30>=0	S<29>=0	$<28,21>=D4	Rm<20,16>	cond<15,12>	op2<11,10>=0	Rn<9,5>	Rd<4,0>
+CSINC	condsel	Iarith	sf<31>=0	op<30>=0	S<29>=0	$<28,21>=D4	Rm<20,16>	cond<15,12>	op2<11,10>=1	Rn<9,5>	Rd<4,0>
+CSINV	condsel	Iarith	sf<31>=0	op<30>=1	S<29>=0	$<28,21>=D4	Rm<20,16>	cond<15,12>	op2<11,10>=0	Rn<9,5>	Rd<4,0>
+CSNEG	condsel	Iarith	sf<31>=0	op<30>=1	S<29>=0	$<28,21>=D4	Rm<20,16>	cond<15,12>	op2<11,10>=1	Rn<9,5>	Rd<4,0>
+CSEL	condsel	Iarith	sf<31>=1	op<30>=0	S<29>=0	$<28,21>=D4	Rm<20,16>	cond<15,12>	op2<11,10>=0	Rn<9,5>	Rd<4,0>
+CSINC	condsel	Iarith	sf<31>=1	op<30>=0	S<29>=0	$<28,21>=D4	Rm<20,16>	cond<15,12>	op2<11,10>=1	Rn<9,5>	Rd<4,0>
+CSINV	condsel	Iarith	sf<31>=1	op<30>=1	S<29>=0	$<28,21>=D4	Rm<20,16>	cond<15,12>	op2<11,10>=0	Rn<9,5>	Rd<4,0>
+CSNEG	condsel	Iarith	sf<31>=1	op<30>=1	S<29>=0	$<28,21>=D4	Rm<20,16>	cond<15,12>	op2<11,10>=1	Rn<9,5>	Rd<4,0>
+
+# data proc 1 src
+!a1
+RBIT	dp1	Iarith	sf<31>=0	$<30>=1	S<29>=0	$<28,21>=D6	-opcode2<20,16>=0	opcode<12,10>=0	Rn<9,5>	Rd<4,0>
+REV16	dp1	Iarith	sf<31>=0	$<30>=1	S<29>=0	$<28,21>=D6	-opcode2<20,16>=0	opcode<12,10>=1	Rn<9,5>	Rd<4,0>
+REV	dp1	Iarith	sf<31>=0	$<30>=1	S<29>=0	$<28,21>=D6	-opcode2<20,16>=0	opcode<12,10>=2	Rn<9,5>	Rd<4,0>
+CLZ	dp1	Iarith	sf<31>=0	$<30>=1	S<29>=0	$<28,21>=D6	-opcode2<20,16>=0	opcode<12,10>=4	Rn<9,5>	Rd<4,0>
+CLZ	dp1	Iarith	sf<31>=0	$<30>=1	S<29>=0	$<28,21>=D6	-opcode2<20,16>=0	opcode<12,10>=5	Rn<9,5>	Rd<4,0>
+RBIT	dp1	Iarith	sf<31>=1	$<30>=1	S<29>=0	$<28,21>=D6	-opcode2<20,16>=0	opcode<12,10>=0	Rn<9,5>	Rd<4,0>
+REV16	dp1	Iarith	sf<31>=1	$<30>=1	S<29>=0	$<28,21>=D6	-opcode2<20,16>=0	opcode<12,10>=1	Rn<9,5>	Rd<4,0>
+REV32	dp1	Iarith	sf<31>=1	$<30>=1	S<29>=0	$<28,21>=D6	-opcode2<20,16>=0	opcode<12,10>=2	Rn<9,5>	Rd<4,0>
+REV	dp1	Iarith	sf<31>=1	$<30>=1	S<29>=0	$<28,21>=D6	-opcode2<20,16>=0	opcode<12,10>=3	Rn<9,5>	Rd<4,0>
+CLZ	dp1	Iarith	sf<31>=1	$<30>=1	S<29>=0	$<28,21>=D6	-opcode2<20,16>=0	opcode<12,10>=4	Rn<9,5>	Rd<4,0>
+CLZ	dp1	Iarith	sf<31>=1	$<30>=1	S<29>=0	$<28,21>=D6	-opcode2<20,16>=0	opcode<12,10>=5	Rn<9,5>	Rd<4,0>
+
+# data proc 2 src
+!a2
+UDIV	dp2	Iarith	sf<31>=0	$<30>=0	-S<29>=0	$<28,21>=D6	Rm<20,16>	opcode<14,10>=2	Rn<9,5>	Rd<4,0>
+SDIV	dp2	Iarith	sf<31>=0	$<30>=0	-S<29>=0	$<28,21>=D6	Rm<20,16>	opcode<14,10>=3	Rn<9,5>	Rd<4,0>
+LSLV	dp2	Iarith	sf<31>=0	$<30>=0	-S<29>=0	$<28,21>=D6	Rm<20,16>	opcode<14,10>=8	Rn<9,5>	Rd<4,0>
+LSRV	dp2	Iarith	sf<31>=0	$<30>=0	-S<29>=0	$<28,21>=D6	Rm<20,16>	opcode<14,10>=9	Rn<9,5>	Rd<4,0>
+ASRV	dp2	Iarith	sf<31>=0	$<30>=0	-S<29>=0	$<28,21>=D6	Rm<20,16>	opcode<14,10>=A	Rn<9,5>	Rd<4,0>
+RORV	dp2	Iarith	sf<31>=0	$<30>=0	-S<29>=0	$<28,21>=D6	Rm<20,16>	opcode<14,10>=B	Rn<9,5>	Rd<4,0>
+UDIV	dp2	Iarith	sf<31>=1	$<30>=0	-S<29>=0	$<28,21>=D6	Rm<20,16>	opcode<14,10>=2	Rn<9,5>	Rd<4,0>
+SDIV	dp2	Iarith	sf<31>=1	$<30>=0	-S<29>=0	$<28,21>=D6	Rm<20,16>	opcode<14,10>=3	Rn<9,5>	Rd<4,0>
+LSLV	dp2	Iarith	sf<31>=1	$<30>=0	-S<29>=0	$<28,21>=D6	Rm<20,16>	opcode<14,10>=8	Rn<9,5>	Rd<4,0>
+LSRV	dp2	Iarith	sf<31>=1	$<30>=0	-S<29>=0	$<28,21>=D6	Rm<20,16>	opcode<14,10>=9	Rn<9,5>	Rd<4,0>
+ASRV	dp2	Iarith	sf<31>=1	$<30>=0	-S<29>=0	$<28,21>=D6	Rm<20,16>	opcode<14,10>=A	Rn<9,5>	Rd<4,0>
+RORV	dp2	Iarith	sf<31>=1	$<30>=0	-S<29>=0	$<28,21>=D6	Rm<20,16>	opcode<14,10>=B	Rn<9,5>	Rd<4,0>
+
+# data proc 3 src
+!a3
+MADD	dp3	Iarith	sf<31>=0	-op54<30,29>=0	$<28,24>=1B	op31<23,21>=0	Rm<20,16>	o0<15>=0	Ra<14,10>	Rn<9,5>	Rd<4,0>
+MSUB	dp3	Iarith	sf<31>=0	-op54<30,29>=0	$<28,24>=1B	op31<23,21>=0	Rm<20,16>	o0<15>=1	Ra<14,10>	Rn<9,5>	Rd<4,0>
+MADD	dp3	Iarith	sf<31>=1	-op54<30,29>=0	$<28,24>=1B	op31<23,21>=0	Rm<20,16>	o0<15>=0	Ra<14,10>	Rn<9,5>	Rd<4,0>
+MSUB	dp3	Iarith	sf<31>=1	-op54<30,29>=0	$<28,24>=1B	op31<23,21>=0	Rm<20,16>	o0<15>=1	Ra<14,10>	Rn<9,5>	Rd<4,0>
+
+# logic shift-reg
+!alsr
+AND	logsreg	Ilog	sf<31>=0	opc<30,29>=0	$<28,24>=A	shift<23,22>	N<21>=0	Rm<20,16>	imm6<15,10>	Rn<9,5>	Rd<4,0>
+BIC	logsreg	Ilog	sf<31>=0	opc<30,29>=0	$<28,24>=A	shift<23,22>	N<21>=1	Rm<20,16>	imm6<15,10>	Rn<9,5>	Rd<4,0>
+ORR	logsreg	Ilog	sf<31>=0	opc<30,29>=1	$<28,24>=A	shift<23,22>	N<21>=0	Rm<20,16>	imm6<15,10>	Rn<9,5>	Rd<4,0>
+ORN	logsreg	Ilog	sf<31>=0	opc<30,29>=1	$<28,24>=A	shift<23,22>	N<21>=1	Rm<20,16>	imm6<15,10>	Rn<9,5>	Rd<4,0>
+EOR	logsreg	Ilog	sf<31>=0	opc<30,29>=2	$<28,24>=A	shift<23,22>	N<21>=0	Rm<20,16>	imm6<15,10>	Rn<9,5>	Rd<4,0>
+EON	logsreg	Ilog	sf<31>=0	opc<30,29>=2	$<28,24>=A	shift<23,22>	N<21>=1	Rm<20,16>	imm6<15,10>	Rn<9,5>	Rd<4,0>
+ANDS	logsreg	Ilog	sf<31>=0	opc<30,29>=3	$<28,24>=A	shift<23,22>	N<21>=0	Rm<20,16>	imm6<15,10>	Rn<9,5>	Rd<4,0>
+BICS	logsreg	Ilog	sf<31>=0	opc<30,29>=3	$<28,24>=A	shift<23,22>	N<21>=1	Rm<20,16>	imm6<15,10>	Rn<9,5>	Rd<4,0>
+AND	logsreg	Ilog	sf<31>=1	opc<30,29>=0	$<28,24>=A	shift<23,22>	N<21>=0	Rm<20,16>	imm6<15,10>	Rn<9,5>	Rd<4,0>
+BIC	logsreg	Ilog	sf<31>=1	opc<30,29>=0	$<28,24>=A	shift<23,22>	N<21>=1	Rm<20,16>	imm6<15,10>	Rn<9,5>	Rd<4,0>
+ORR	logsreg	Ilog	sf<31>=1	opc<30,29>=1	$<28,24>=A	shift<23,22>	N<21>=0	Rm<20,16>	imm6<15,10>	Rn<9,5>	Rd<4,0>
+ORN	logsreg	Ilog	sf<31>=1	opc<30,29>=1	$<28,24>=A	shift<23,22>	N<21>=1	Rm<20,16>	imm6<15,10>	Rn<9,5>	Rd<4,0>
+EOR	logsreg	Ilog	sf<31>=1	opc<30,29>=2	$<28,24>=A	shift<23,22>	N<21>=0	Rm<20,16>	imm6<15,10>	Rn<9,5>	Rd<4,0>
+EON	logsreg	Ilog	sf<31>=1	opc<30,29>=2	$<28,24>=A	shift<23,22>	N<21>=1	Rm<20,16>	imm6<15,10>	Rn<9,5>	Rd<4,0>
+ANDS	logsreg	Ilog	sf<31>=1	opc<30,29>=3	$<28,24>=A	shift<23,22>	N<21>=0	Rm<20,16>	imm6<15,10>	Rn<9,5>	Rd<4,0>
+BICS	logsreg	Ilog	sf<31>=1	opc<30,29>=3	$<28,24>=A	shift<23,22>	N<21>=1	Rm<20,16>	imm6<15,10>	Rn<9,5>	Rd<4,0>
+
+## loads and stores
+@opls	27	25
+# load/store reg
+!lsr
+LDR	ldstreg	Iload	opc<31,30>=0	$<29,27>=3	V<26>=0	$<25,24>=0	imm19<23,5>	Rt<4,0>
+LDR	ldstreg	Iload	opc<31,30>=1	$<29,27>=3	V<26>=0	$<25,24>=0	imm19<23,5>	Rt<4,0>
+LDRSW	ldstreg	Iload	opc<31,30>=2	$<29,27>=3	V<26>=0	$<25,24>=0	imm19<23,5>	Rt<4,0>
+PRFM	ldstreg	Iload	opc<31,30>=3	$<29,27>=3	V<26>=0	$<25,24>=0	imm19<23,5>	Rt<4,0>
+
+# load/store ex
+!lsx
+STXRB	ldstex	Istore	size<31,30>=0	$<29,24>=8	o2<23>=0	L<22>=0	o1<21>=0	Rs<20,16>	o0<15>=0	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+STLXRB	ldstex	Istore	size<31,30>=0	$<29,24>=8	o2<23>=0	L<22>=0	o1<21>=0	Rs<20,16>	o0<15>=1	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+LDXRB	ldstex	Iload	size<31,30>=0	$<29,24>=8	o2<23>=0	L<22>=1	o1<21>=0	Rs<20,16>	o0<15>=0	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+LDAXRB	ldstex	Iload	size<31,30>=0	$<29,24>=8	o2<23>=0	L<22>=1	o1<21>=0	Rs<20,16>	o0<15>=1	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+STLRB	ldstex	Istore	size<31,30>=0	$<29,24>=8	o2<23>=1	L<22>=0	o1<21>=0	Rs<20,16>	o0<15>=1	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+LDARB	ldstex	Iload	size<31,30>=0	$<29,24>=8	o2<23>=1	L<22>=1	o1<21>=0	Rs<20,16>	o0<15>=1	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+STXRH	ldstex	Istore	size<31,30>=1	$<29,24>=8	o2<23>=0	L<22>=0	o1<21>=0	Rs<20,16>	o0<15>=0	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+STLXRH	ldstex	Istore	size<31,30>=1	$<29,24>=8	o2<23>=0	L<22>=0	o1<21>=0	Rs<20,16>	o0<15>=1	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+LDXRH	ldstex	Iload	size<31,30>=1	$<29,24>=8	o2<23>=0	L<22>=1	o1<21>=0	Rs<20,16>	o0<15>=0	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+LDAXRH	ldstex	Iload	size<31,30>=1	$<29,24>=8	o2<23>=0	L<22>=1	o1<21>=0	Rs<20,16>	o0<15>=1	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+STLRH	ldstex	Istore	size<31,30>=1	$<29,24>=8	o2<23>=1	L<22>=0	o1<21>=0	Rs<20,16>	o0<15>=1	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+LDARH	ldstex	Iload	size<31,30>=1	$<29,24>=8	o2<23>=1	L<22>=1	o1<21>=0	Rs<20,16>	o0<15>=1	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+STXR	ldstex	Istore	size<31,30>=2	$<29,24>=8	o2<23>=0	L<22>=0	o1<21>=0	Rs<20,16>	o0<15>=0	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+STLXR	ldstex	Istore	size<31,30>=2	$<29,24>=8	o2<23>=0	L<22>=0	o1<21>=0	Rs<20,16>	o0<15>=1	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+STXP	ldstex	Istore	size<31,30>=2	$<29,24>=8	o2<23>=0	L<22>=0	o1<21>=1	Rs<20,16>	o0<15>=0	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+STLXP	ldstex	Istore	size<31,30>=2	$<29,24>=8	o2<23>=0	L<22>=0	o1<21>=1	Rs<20,16>	o0<15>=1	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+LDXR	ldstex	Iload	size<31,30>=2	$<29,24>=8	o2<23>=0	L<22>=1	o1<21>=0	Rs<20,16>	o0<15>=0	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+LDAXR	ldstex	Iload	size<31,30>=2	$<29,24>=8	o2<23>=0	L<22>=1	o1<21>=0	Rs<20,16>	o0<15>=1	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+LDXP	ldstex	Iload	size<31,30>=2	$<29,24>=8	o2<23>=0	L<22>=1	o1<21>=1	Rs<20,16>	o0<15>=0	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+LDAXP	ldstex	Iload	size<31,30>=2	$<29,24>=8	o2<23>=0	L<22>=1	o1<21>=1	Rs<20,16>	o0<15>=1	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+STLR	ldstex	Istore	size<31,30>=2	$<29,24>=8	o2<23>=1	L<22>=0	o1<21>=0	Rs<20,16>	o0<15>=1	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+STLR	ldstex	Istore	size<31,30>=2	$<29,24>=8	o2<23>=1	L<22>=1	o1<21>=0	Rs<20,16>	o0<15>=1	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+STXR	ldstex	Istore	size<31,30>=3	$<29,24>=8	o2<23>=0	L<22>=0	o1<21>=0	Rs<20,16>	o0<15>=0	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+STLXR	ldstex	Istore	size<31,30>=3	$<29,24>=8	o2<23>=0	L<22>=0	o1<21>=0	Rs<20,16>	o0<15>=1	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+STXP	ldstex	Istore	size<31,30>=3	$<29,24>=8	o2<23>=0	L<22>=0	o1<21>=1	Rs<20,16>	o0<15>=0	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+STLXP	ldstex	Istore	size<31,30>=3	$<29,24>=8	o2<23>=0	L<22>=0	o1<21>=1	Rs<20,16>	o0<15>=1	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+LDXR	ldstex	Iload	size<31,30>=3	$<29,24>=8	o2<23>=0	L<22>=1	o1<21>=0	Rs<20,16>	o0<15>=0	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+LDAXR	ldstex	Iload	size<31,30>=3	$<29,24>=8	o2<23>=0	L<22>=1	o1<21>=0	Rs<20,16>	o0<15>=1	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+LDXP	ldstex	Iload	size<31,30>=3	$<29,24>=8	o2<23>=0	L<22>=1	o1<21>=1	Rs<20,16>	o0<15>=0	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+LDAXP	ldstex	Iload	size<31,30>=3	$<29,24>=8	o2<23>=0	L<22>=1	o1<21>=1	Rs<20,16>	o0<15>=1	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+STLR	ldstex	Iload	size<31,30>=3	$<29,24>=8	o2<23>=1	L<22>=0	o1<21>=0	Rs<20,16>	o0<15>=1	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+STLR	ldstex	Iload	size<31,30>=3	$<29,24>=8	o2<23>=1	L<22>=1	o1<21>=0	Rs<20,16>	o0<15>=1	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+
+# load/store no-alloc pair (off)
+!lsnp
+STNP	ldstnoallocp	Istore	opc<31,30>=0	$<29,27>=5	V<26>=0	$<25,23>=0	L<22>=0	imm7<21,15>	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+LDNP	ldstnoallocp	Iload	opc<31,30>=0	$<29,27>=5	V<26>=0	$<25,23>=0	L<22>=1	imm7<21,15>	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+STNP	ldstnoallocp	Istore	opc<31,30>=2	$<29,27>=5	V<26>=0	$<25,23>=0	L<22>=0	imm7<21,15>	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+LDNP	ldstnoallocp	Iload	opc<31,30>=2	$<29,27>=5	V<26>=0	$<25,23>=0	L<22>=1	imm7<21,15>	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+
+# load/store reg (imm post-index)
+!lspos
+STRB	ldstregimmpost	Istore	size<31,30>=0	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=0	$<21>=0	imm9<20,12>	$<11,10>=1	Rn<9,5>	Rt<4,0>
+LDRB	ldstregimmpost	Iload	size<31,30>=0	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=1	$<21>=0	imm9<20,12>	$<11,10>=1	Rn<9,5>	Rt<4,0>
+LDRSB	ldstregimmpost	Iload	size<31,30>=0	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=2	$<21>=0	imm9<20,12>	$<11,10>=1	Rn<9,5>	Rt<4,0>
+LDRSB	ldstregimmpost	Iload	size<31,30>=0	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=3	$<21>=0	imm9<20,12>	$<11,10>=1	Rn<9,5>	Rt<4,0>
+STRH	ldstregimmpost	Istore	size<31,30>=1	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=0	$<21>=0	imm9<20,12>	$<11,10>=1	Rn<9,5>	Rt<4,0>
+LDRH	ldstregimmpost	Iload	size<31,30>=1	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=1	$<21>=0	imm9<20,12>	$<11,10>=1	Rn<9,5>	Rt<4,0>
+LDRSH	ldstregimmpost	Iload	size<31,30>=1	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=2	$<21>=0	imm9<20,12>	$<11,10>=1	Rn<9,5>	Rt<4,0>
+LDRSH	ldstregimmpost	Iload	size<31,30>=1	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=3	$<21>=0	imm9<20,12>	$<11,10>=1	Rn<9,5>	Rt<4,0>
+STR	ldstregimmpost	Istore	size<31,30>=2	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=0	$<21>=0	imm9<20,12>	$<11,10>=1	Rn<9,5>	Rt<4,0>
+LDR	ldstregimmpost	Iload	size<31,30>=2	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=1	$<21>=0	imm9<20,12>	$<11,10>=1	Rn<9,5>	Rt<4,0>
+LDRSW	ldstregimmpost	Iload	size<31,30>=2	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=2	$<21>=0	imm9<20,12>	$<11,10>=1	Rn<9,5>	Rt<4,0>
+STR	ldstregimmpost	Istore	size<31,30>=3	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=0	$<21>=0	imm9<20,12>	$<11,10>=1	Rn<9,5>	Rt<4,0>
+LDR	ldstregimmpost	Iload	size<31,30>=3	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=1	$<21>=0	imm9<20,12>	$<11,10>=1	Rn<9,5>	Rt<4,0>
+
+# load/store reg (imm pre-index)
+!lspre
+STRB	ldstregimmpre	Istore	size<31,30>=0	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=0	$<21>=0	imm9<20,12>	$<11,10>=3	Rn<9,5>	Rt<4,0>
+LDRB	ldstregimmpre	Iload	size<31,30>=0	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=1	$<21>=0	imm9<20,12>	$<11,10>=3	Rn<9,5>	Rt<4,0>
+LDRSB	ldstregimmpre	Iload	size<31,30>=0	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=2	$<21>=0	imm9<20,12>	$<11,10>=3	Rn<9,5>	Rt<4,0>
+LDRSB	ldstregimmpre	Iload	size<31,30>=0	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=3	$<21>=0	imm9<20,12>	$<11,10>=3	Rn<9,5>	Rt<4,0>
+STRH	ldstregimmpre	Istore	size<31,30>=1	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=0	$<21>=0	imm9<20,12>	$<11,10>=3	Rn<9,5>	Rt<4,0>
+LDRH	ldstregimmpre	Iload	size<31,30>=1	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=1	$<21>=0	imm9<20,12>	$<11,10>=3	Rn<9,5>	Rt<4,0>
+LDRSH	ldstregimmpre	Iload	size<31,30>=1	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=2	$<21>=0	imm9<20,12>	$<11,10>=3	Rn<9,5>	Rt<4,0>
+LDRSH	ldstregimmpre	Iload	size<31,30>=1	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=3	$<21>=0	imm9<20,12>	$<11,10>=3	Rn<9,5>	Rt<4,0>
+STR	ldstregimmpre	Istore	size<31,30>=2	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=0	$<21>=0	imm9<20,12>	$<11,10>=3	Rn<9,5>	Rt<4,0>
+LDR	ldstregimmpre	Iload	size<31,30>=2	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=1	$<21>=0	imm9<20,12>	$<11,10>=3	Rn<9,5>	Rt<4,0>
+LDRSW	ldstregimmpre	Iload	size<31,30>=2	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=2	$<21>=0	imm9<20,12>	$<11,10>=3	Rn<9,5>	Rt<4,0>
+STR	ldstregimmpre	Istore	size<31,30>=3	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=0	$<21>=0	imm9<20,12>	$<11,10>=3	Rn<9,5>	Rt<4,0>
+LDR	ldstregimmpre	Iload	size<31,30>=3	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=1	$<21>=0	imm9<20,12>	$<11,10>=3	Rn<9,5>	Rt<4,0>
+
+# load/store reg (off)
+!lso
+STRB	ldstregoff	Istore	size<31,30>=0	$<29,27>=7	V<26>=0	$<25,24>0	opc<23,22>=0	$<21>=1	Rm<20,16>	option<15,13>	S<12>	$<11,10>=2	Rn<9,5>	Rt<4,0>
+LDRB	ldstregoff	Iload	size<31,30>=0	$<29,27>=7	V<26>=0	$<25,24>0	opc<23,22>=1	$<21>=1	Rm<20,16>	option<15,13>	S<12>	$<11,10>=2	Rn<9,5>	Rt<4,0>
+LDRSB	ldstregoff	Iload	size<31,30>=0	$<29,27>=7	V<26>=0	$<25,24>0	opc<23,22>=2	$<21>=1	Rm<20,16>	option<15,13>	S<12>	$<11,10>=2	Rn<9,5>	Rt<4,0>
+LDRSB	ldstregoff	Iload	size<31,30>=0	$<29,27>=7	V<26>=0	$<25,24>0	opc<23,22>=3	$<21>=1	Rm<20,16>	option<15,13>	S<12>	$<11,10>=2	Rn<9,5>	Rt<4,0>
+STRH	ldstregoff	Istore	size<31,30>=1	$<29,27>=7	V<26>=0	$<25,24>0	opc<23,22>=0	$<21>=1	Rm<20,16>	option<15,13>	S<12>	$<11,10>=2	Rn<9,5>	Rt<4,0>
+LDRH	ldstregoff	Iload	size<31,30>=1	$<29,27>=7	V<26>=0	$<25,24>0	opc<23,22>=1	$<21>=1	Rm<20,16>	option<15,13>	S<12>	$<11,10>=2	Rn<9,5>	Rt<4,0>
+LDRSH	ldstregoff	Iload	size<31,30>=1	$<29,27>=7	V<26>=0	$<25,24>0	opc<23,22>=2	$<21>=1	Rm<20,16>	option<15,13>	S<12>	$<11,10>=2	Rn<9,5>	Rt<4,0>
+LDRSH	ldstregoff	Iload	size<31,30>=1	$<29,27>=7	V<26>=0	$<25,24>0	opc<23,22>=3	$<21>=1	Rm<20,16>	option<15,13>	S<12>	$<11,10>=2	Rn<9,5>	Rt<4,0>
+STR	ldstregoff	Istore	size<31,30>=2	$<29,27>=7	V<26>=0	$<25,24>0	opc<23,22>=0	$<21>=1	Rm<20,16>	option<15,13>	S<12>	$<11,10>=2	Rn<9,5>	Rt<4,0>
+LDR	ldstregoff	Iload	size<31,30>=2	$<29,27>=7	V<26>=0	$<25,24>0	opc<23,22>=1	$<21>=1	Rm<20,16>	option<15,13>	S<12>	$<11,10>=2	Rn<9,5>	Rt<4,0>
+STR	ldstregoff	Istore	size<31,30>=3	$<29,27>=7	V<26>=0	$<25,24>0	opc<23,22>=0	$<21>=1	Rm<20,16>	option<15,13>	S<12>	$<11,10>=2	Rn<9,5>	Rt<4,0>
+LDR	ldstregoff	Iload	size<31,30>=3	$<29,27>=7	V<26>=0	$<25,24>0	opc<23,22>=1	$<21>=1	Rm<20,16>	option<15,13>	S<12>	$<11,10>=2	Rn<9,5>	Rt<4,0>
+PRFM	ldstregoff	Iload	size<31,30>=3	$<29,27>=7	V<26>=0	$<25,24>0	opc<23,22>=2	$<21>=1	Rm<20,16>	option<15,13>	S<12>	$<11,10>=2	Rn<9,5>	Rt<4,0>
+
+# load/store reg (unpriv)
+!lsu
+STTRB	ldstregupriv	Istore	size<31,30>=0	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=0	$<21>=0	imm9<20,12>	$<11,10>=2	Rn<9,5>	Rt<4,0>
+LDTRB	ldstregupriv	Iload	size<31,30>=0	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=1	$<21>=0	imm9<20,12>	$<11,10>=2	Rn<9,5>	Rt<4,0>
+LDTRSB	ldstregupriv	Iload	size<31,30>=0	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=2	$<21>=0	imm9<20,12>	$<11,10>=2	Rn<9,5>	Rt<4,0>
+LDTRSB	ldstregupriv	Iload	size<31,30>=0	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=3	$<21>=0	imm9<20,12>	$<11,10>=2	Rn<9,5>	Rt<4,0>
+STTRH	ldstregupriv	Istore	size<31,30>=1	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=0	$<21>=0	imm9<20,12>	$<11,10>=2	Rn<9,5>	Rt<4,0>
+LDTRH	ldstregupriv	Iload	size<31,30>=1	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=1	$<21>=0	imm9<20,12>	$<11,10>=2	Rn<9,5>	Rt<4,0>
+LDTRSH	ldstregupriv	Iload	size<31,30>=1	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=2	$<21>=0	imm9<20,12>	$<11,10>=2	Rn<9,5>	Rt<4,0>
+LDTRSH	ldstregupriv	Iload	size<31,30>=1	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=3	$<21>=0	imm9<20,12>	$<11,10>=2	Rn<9,5>	Rt<4,0>
+STTR	ldstregupriv	Istore	size<31,30>=2	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=0	$<21>=0	imm9<20,12>	$<11,10>=2	Rn<9,5>	Rt<4,0>
+LDTR	ldstregupriv	Iload	size<31,30>=2	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=1	$<21>=0	imm9<20,12>	$<11,10>=2	Rn<9,5>	Rt<4,0>
+LDTRSW	ldstregupriv	Iload	size<31,30>=2	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=2	$<21>=0	imm9<20,12>	$<11,10>=2	Rn<9,5>	Rt<4,0>
+STTR	ldstregupriv	Istore	size<31,30>=3	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=0	$<21>=0	imm9<20,12>	$<11,10>=2	Rn<9,5>	Rt<4,0>
+LDTR	ldstregupriv	Iload	size<31,30>=3	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=1	$<21>=0	imm9<20,12>	$<11,10>=2	Rn<9,5>	Rt<4,0>
+
+# load/store reg (unscaled imm)
+!lsuci
+STURB	ldstreguscaleimm	Istore	size<31,30>=0	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=0	$<21>=0	imm9<20,12>	$<11,10>=0	Rn<9,5>	Rt<4,0>
+LDURB	ldstreguscaleimm	Iload	size<31,30>=0	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=1	$<21>=0	imm9<20,12>	$<11,10>=0	Rn<9,5>	Rt<4,0>
+LDURSB	ldstreguscaleimm	Iload	size<31,30>=0	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=2	$<21>=0	imm9<20,12>	$<11,10>=0	Rn<9,5>	Rt<4,0>
+LDURSB	ldstreguscaleimm	Iload	size<31,30>=0	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=3	$<21>=0	imm9<20,12>	$<11,10>=0	Rn<9,5>	Rt<4,0>
+STURH	ldstreguscaleimm	Istore	size<31,30>=1	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=0	$<21>=0	imm9<20,12>	$<11,10>=0	Rn<9,5>	Rt<4,0>
+LDURH	ldstreguscaleimm	Iload	size<31,30>=1	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=1	$<21>=0	imm9<20,12>	$<11,10>=0	Rn<9,5>	Rt<4,0>
+LDURSH	ldstreguscaleimm	Iload	size<31,30>=1	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=2	$<21>=0	imm9<20,12>	$<11,10>=0	Rn<9,5>	Rt<4,0>
+LDURSH	ldstreguscaleimm	Iload	size<31,30>=1	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=3	$<21>=0	imm9<20,12>	$<11,10>=0	Rn<9,5>	Rt<4,0>
+STUR	ldstreguscaleimm	Istore	size<31,30>=2	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=0	$<21>=0	imm9<20,12>	$<11,10>=0	Rn<9,5>	Rt<4,0>
+LDUR	ldstreguscaleimm	Iload	size<31,30>=2	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=1	$<21>=0	imm9<20,12>	$<11,10>=0	Rn<9,5>	Rt<4,0>
+LDURSW	ldstreguscaleimm	Iload	size<31,30>=2	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=2	$<21>=0	imm9<20,12>	$<11,10>=0	Rn<9,5>	Rt<4,0>
+STUR	ldstreguscaleimm	Istore	size<31,30>=3	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=0	$<21>=0	imm9<20,12>	$<11,10>=0	Rn<9,5>	Rt<4,0>
+LDUR	ldstreguscaleimm	Iload	size<31,30>=3	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=1	$<21>=0	imm9<20,12>	$<11,10>=0	Rn<9,5>	Rt<4,0>
+PRFUM	ldstreguscaleimm	Iload	size<31,30>=3	$<29,27>=7	V<26>=0	$<25,24>=0	opc<23,22>=2	$<21>=0	imm9<20,12>	$<11,10>=0	Rn<9,5>	Rt<4,0>
+
+# load/store reg (unsigned imm)
+!lsusi
+STRB	ldstregusignimm	Istore	size<31,30>=0	$<29,27>=7	V<26>=0	$<25,24>=1	opc<23,22>=0	imm12<21,10>	Rn<9,5>	Rt<4,0>
+LDRB	ldstregusignimm	Iload	size<31,30>=0	$<29,27>=7	V<26>=0	$<25,24>=1	opc<23,22>=1	imm12<21,10>	Rn<9,5>	Rt<4,0>
+LDRSB	ldstregusignimm	Iload	size<31,30>=0	$<29,27>=7	V<26>=0	$<25,24>=1	opc<23,22>=2	imm12<21,10>	Rn<9,5>	Rt<4,0>
+LDRSB	ldstregusignimm	Iload	size<31,30>=0	$<29,27>=7	V<26>=0	$<25,24>=1	opc<23,22>=3	imm12<21,10>	Rn<9,5>	Rt<4,0>
+STRH	ldstregusignimm	Istore	size<31,30>=1	$<29,27>=7	V<26>=0	$<25,24>=1	opc<23,22>=0	imm12<21,10>	Rn<9,5>	Rt<4,0>
+LDRH	ldstregusignimm	Iload	size<31,30>=1	$<29,27>=7	V<26>=0	$<25,24>=1	opc<23,22>=1	imm12<21,10>	Rn<9,5>	Rt<4,0>
+LDRSH	ldstregusignimm	Iload	size<31,30>=1	$<29,27>=7	V<26>=0	$<25,24>=1	opc<23,22>=2	imm12<21,10>	Rn<9,5>	Rt<4,0>
+LDRSH	ldstregusignimm	Iload	size<31,30>=1	$<29,27>=7	V<26>=0	$<25,24>=1	opc<23,22>=3	imm12<21,10>	Rn<9,5>	Rt<4,0>
+STR	ldstregusignimm	Istore	size<31,30>=2	$<29,27>=7	V<26>=0	$<25,24>=1	opc<23,22>=0	imm12<21,10>	Rn<9,5>	Rt<4,0>
+LDR	ldstregusignimm	Iload	size<31,30>=2	$<29,27>=7	V<26>=0	$<25,24>=1	opc<23,22>=1	imm12<21,10>	Rn<9,5>	Rt<4,0>
+LDRSW	ldstregusignimm	Iload	size<31,30>=2	$<29,27>=7	V<26>=0	$<25,24>=1	opc<23,22>=2	imm12<21,10>	Rn<9,5>	Rt<4,0>
+STR	ldstregusignimm	Istore	size<31,30>=3	$<29,27>=7	V<26>=0	$<25,24>=1	opc<23,22>=0	imm12<21,10>	Rn<9,5>	Rt<4,0>
+LDR	ldstregusignimm	Iload	size<31,30>=3	$<29,27>=7	V<26>=0	$<25,24>=1	opc<23,22>=1	imm12<21,10>	Rn<9,5>	Rt<4,0>
+PRFM	ldstregusignimm	Istore	size<31,30>=3	$<29,27>=7	V<26>=0	$<25,24>=1	opc<23,22>=2	imm12<21,10>	Rn<9,5>	Rt<4,0>
+
+# load/store reg-pair (off)
+!lsrpo
+STP	ldstregpoff	Istore	opc<31,30>=0	$<29,27>=5	V<26>=0	$<25,23>=2	L<22>=0	imm7<21,15>	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+LDP	ldstregpoff	Iload	opc<31,30>=0	$<29,27>=5	V<26>=0	$<25,23>=2	L<22>=1	imm7<21,15>	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+LDPSW	ldstregpoff	Iload	opc<31,30>=1	$<29,27>=5	V<26>=0	$<25,23>=2	L<22>=1	imm7<21,15>	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+STP	ldstregpoff	Iload	opc<31,30>=2	$<29,27>=5	V<26>=0	$<25,23>=2	L<22>=0	imm7<21,15>	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+LDP	ldstregpoff	Iload	opc<31,30>=2	$<29,27>=5	V<26>=0	$<25,23>=2	L<22>=1	imm7<21,15>	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+
+# load/store reg-pair (post-index)
+!lsppo
+STP	ldstregppost	Istore	opc<31,30>=0	$<29,27>=5	V<26>=0	$<25,23>=1	L<22>=0	imm7<21,15>	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+LDP	ldstregppost	Iload	opc<31,30>=0	$<29,27>=5	V<26>=0	$<25,23>=1	L<22>=1	imm7<21,15>	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+LDPSW	ldstregppost	Iload	opc<31,30>=1	$<29,27>=5	V<26>=0	$<25,23>=1	L<22>=1	imm7<21,15>	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+STP	ldstregppost	Istore	opc<31,30>=2	$<29,27>=5	V<26>=0	$<25,23>=1	L<22>=0	imm7<21,15>	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+LDP	ldstregppost	Iload	opc<31,30>=2	$<29,27>=5	V<26>=0	$<25,23>=1	L<22>=1	imm7<21,15>	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+
+# load/store reg-pair (pre-index)
+!lsppr
+STP	ldstregppre	Istore	opc<31,30>=0	$<29,27>=5	V<26>=0	$<25,23>=3	L<22>=0	imm7<21,15>	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+LDP	ldstregppre	Iload	opc<31,30>=0	$<29,27>=5	V<26>=0	$<25,23>=3	L<22>=1	imm7<21,15>	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+LDPSW	ldstregppre	Iload	opc<31,30>=1	$<29,27>=5	V<26>=0	$<25,23>=3	L<22>=1	imm7<21,15>	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+STP	ldstregppre	Istore	opc<31,30>=2	$<29,27>=5	V<26>=0	$<25,23>=3	L<22>=0	imm7<21,15>	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+LDP	ldstregppre	Iload	opc<31,30>=2	$<29,27>=5	V<26>=0	$<25,23>=3	L<22>=1	imm7<21,15>	Rt2<14,10>	Rn<9,5>	Rt<4,0>
