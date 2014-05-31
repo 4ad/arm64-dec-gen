@@ -80,8 +80,8 @@ MOVK	movwimm	Iarith	sf<31>=1	opc<30,29>=3	$<28,23>=25	hw<22,21>	imm16<20,5>	Rd<4
 
 # PC-rel addr
 !apcr
-ADR	pcrel	Iarith	op<31>=0	immlo<30,29>=0	$<28,24>=10	immhi<23,5>	Rd<4,0>
-ADRP	pcrel	Iarith	op<31>=1	immlo<30,29>=0	$<28,24>=10	immhi<23,5>	Rd<4,0>
+ADR	pcrel	Iarith	op<31>=0	immlo<30,29>	$<28,24>=10	immhi<23,5>	Rd<4,0>
+ADRP	pcrel	Iarith	op<31>=1	immlo<30,29>	$<28,24>=10	immhi<23,5>	Rd<4,0>
 
 @opdreg	27,25
 # add/sub extended reg
