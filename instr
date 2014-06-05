@@ -11,9 +11,13 @@ CBNZ	cmpb	Ibranch	sf<31>=1	$<30,25>=1A	op<24>=1	imm19<23,5>	Rt<4,0>
 !cb
 B.cond	condb	Ibranch	$<31,25>=2A	o1<24>	imm19<23,5>	o0<4>=0	cond<3,0>
 
+# exception generation
+!ex
+SVC	syscall	Isyscall	$<31,24>=D4	opc<23,21>=0	imm16<20,5>	-op2<4,2>=0	LL<1,0>=1
+
 # system
 !sys
-SVC	syscall	Isyscall	$<31,24>=D4	opc<23,21>=0	imm16<20,5>	-op2<4,2>=0	LL<1,0>=1
+CLREX	sys	Isys	$<31,22>=354	-L<21>=0	-op0<20,19>=0	-op1<18,16>=3	CRn<14,12>=3	CRm<11,8>	op2<7,5>=2	Rt<4,0>
 
 # test and branch
 !tb
