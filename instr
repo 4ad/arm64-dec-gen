@@ -238,7 +238,7 @@ LDXR	ldstex	Iload	size<31,30>=3	$<29,24>=8	o2<23>=0	L<22>=1	o1<21>=0	Rs<20,16>	o
 LDAXR	ldstex	Iload	size<31,30>=3	$<29,24>=8	o2<23>=0	L<22>=1	o1<21>=0	Rs<20,16>	o0<15>=1	Rt2<14,10>	Rn<9,5>	Rt<4,0>
 LDXP	ldstex	Iload	size<31,30>=3	$<29,24>=8	o2<23>=0	L<22>=1	o1<21>=1	Rs<20,16>	o0<15>=0	Rt2<14,10>	Rn<9,5>	Rt<4,0>
 LDAXP	ldstex	Iload	size<31,30>=3	$<29,24>=8	o2<23>=0	L<22>=1	o1<21>=1	Rs<20,16>	o0<15>=1	Rt2<14,10>	Rn<9,5>	Rt<4,0>
-STLR	ldstex	Iload	size<31,30>=3	$<29,24>=8	o2<23>=1	L<22>=0	o1<21>=0	Rs<20,16>	o0<15>=1	Rt2<14,10>	Rn<9,5>	Rt<4,0>
+STLR	ldstex	Istore	size<31,30>=3	$<29,24>=8	o2<23>=1	L<22>=0	o1<21>=0	Rs<20,16>	o0<15>=1	Rt2<14,10>	Rn<9,5>	Rt<4,0>
 LDAR	ldstex	Iload	size<31,30>=3	$<29,24>=8	o2<23>=1	L<22>=1	o1<21>=0	Rs<20,16>	o0<15>=1	Rt2<14,10>	Rn<9,5>	Rt<4,0>
 
 # load/store no-alloc pair (off)
